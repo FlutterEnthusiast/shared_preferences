@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sahre_task5/contoroller/get_data.dart';
 
 class DisplayData extends StatefulWidget {
   const DisplayData({super.key});
@@ -8,22 +8,20 @@ class DisplayData extends StatefulWidget {
 }
 
 class _DisplayDataState extends State<DisplayData> {
-  String status = '';
-  String email = '';
 
+GetData gettData=GetData();
+void loadData()async{
+  await gettData.getData();
+  setState(() {});
+}
   @override
   void initState() {
+   loadData();
     super.initState();
-    getData();
+
   }
 
-  Future<void> getData() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      email = pref.getString('email') ?? ''; // Handle null values safely
-      status = pref.getString('status') ?? '';
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +75,7 @@ class _DisplayDataState extends State<DisplayData> {
                           height: 12,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: status == 'Active' ? Colors.green : Colors.red,
+                            color: gettData.status == 'Active' ? Colors.green : Colors.red,
                           ),
                         ),
                       ),
@@ -89,13 +87,13 @@ class _DisplayDataState extends State<DisplayData> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: status == 'Active' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                    color: gettData.status == 'Active' ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    status=='Active' ? 'Active' : 'Un-Active',
+                    gettData.status=='Active' ? 'Active' : 'Un-Active',
                     style: TextStyle(
-                      color: status == 'Active' ? Colors.green[700] : Colors.red[700],
+                      color: gettData.status == 'Active' ? Colors.green[700] : Colors.red[700],
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -117,7 +115,7 @@ class _DisplayDataState extends State<DisplayData> {
                           _buildInfoRow(
                             icon: Icons.email_outlined,
                             label: 'Email',
-                            value: email.isNotEmpty ? email : 'Not Available',
+                            value: gettData.email.isNotEmpty ?gettData.email : 'Not Available',
                           ),
                         ],
                       ),
